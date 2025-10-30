@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Personal Day Assistant • ConnectOnion</title>
+    <style>
+        :root {
+            --bg-page: #0f172a;
+            --bg-card: #1e253a;
+            --bg-card-soft: rgba(30, 37, 58, 0.6);
+            --border-card: rgba(255,255,255,0.07);
+            --text-primary: #fff;
+            --text-dim: #9ca3af;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --radius-lg: 1rem;
+            --radius-md: .75rem;
+            --radius-sm: .5rem;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-page);
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(99,102,241,0.18) 0%, transparent 60%),
+                radial-gradient(circle at 80% 10%, rgba(14,165,233,0.12) 0%, transparent 60%),
+                radial-gradient(circle at 50% 80%, rgba(236,72,153,0.08) 0%, transparent 70%);
+            background-attachment: fixed;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", Roboto, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 2rem 1rem 4rem;
+        }
+
+        .shell {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* -------------------------------------------------
+           HEADER / TOP BAR
+        ------------------------------------------------- */
+        .topbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .top-left {
+            min-width: 200px;
+        }
+
+        .app-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .badge {
+            font-size: .65rem;
+            font-weight: 500;
+            background: rgba(99,102,241,0.18);
+            color: var(--accent);
+            border: 1px solid rgba(99,102,241,0.4);
+            padding: .25rem .5rem;
+            border-radius: var(--radius-sm);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: .8rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            line-height: 1.4;
+        }
+
+        .actions {
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+        }
+
+        .small-meta {
+            font-size: .7rem;
+            color: var(--text-dim);
+            line-height: 1.2;
+            text-align: right;
+        }
+
+        .run-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: radial-gradient(circle at 0% 0%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 70%),
+                        linear-gradient(90deg, #4f46e5 0%, #0ea5e9 100%);
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 500;
+            border: 0;
+            border-radius: var(--radius-md);
+            padding: .6rem .9rem;
+            line-height: 1.2;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 20px 40px -8px rgba(0,0,0,0.8),
+                        0 0 30px rgba(99,102,241,0.6);
+        }
+        .run-btn:hover {
+            filter: brightness(1.07);
+        }
+
+        .run-btn span.light {
+            font-size: .7rem;
+            font-weight: 400;
+            opacity: .8;
+        }
+
+        /* -------------------------------------------------
+           SUMMARY CARD
+        ------------------------------------------------- */
+        .summary-card {
+            position: relative;
+            background: radial-gradient(circle at 0% 0%, rgba(99,102,241,0.15) 0%, rgba(15,23,42,0) 60%),
+                        radial-gradient(circle at 100% 100%, rgba(14,165,233,0.12) 0%, rgba(0,0,0,0) 70%),
+                        var(--bg-card-soft);
+            border: 1px solid var(--border-card);
+            box-shadow:
+                0 30px 80px -10px rgba(0,0,0,.9),
+                0 0 120px rgba(99,102,241,.4),
+                0 0 200px rgba(14,165,233,.2);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.25rem 1rem;
+            margin-bottom: 2rem;
+            min-height: 140px;
+        }
+
+        .summary-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: var(--text-dim);
+            letter-spacing: .05em;
+            margin-bottom: .75rem;
+        }
+
+        .summary-body {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: .8rem;
+            font-weight: 400;
+            color: #f8fafc;
+            line-height: 1.4rem;
+            white-space: pre-wrap;
+        }
+
+        /* -------------------------------------------------
+           SCREENSHOT GRID
+        ------------------------------------------------- */
+        .shots-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(360px,100%), 1fr));
+            gap: 1.5rem;
+        }
+
+        .shot-card {
+            background: rgba(15,23,42,0.6);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow:
+                0 30px 80px -10px rgba(0,0,0,.9),
+                0 0 80px rgba(0,0,0,.6);
+            padding: 1rem 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .shot-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: .75rem;
+        }
+
+        .shot-name {
+            font-size: .8rem;
+            font-weight: 500;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .dot {
+            width: .4rem;
+            height: .4rem;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #34d399 0%, #059669 60%);
+            box-shadow: 0 0 10px #34d399;
+        }
+
+        .shot-hint {
+            font-size: .7rem;
+            color: var(--text-dim);
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .shot-frame {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255,255,255,0.08);
+            background-color: #0b1220;
+            box-shadow:
+                0 25px 60px -10px rgba(0,0,0,.9),
+                0 0 60px rgba(99,102,241,.2);
+            overflow: hidden;
+        }
+
+        .shot-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* -------------------------------------------------
+           EMPTY STATE
+        ------------------------------------------------- */
+        .empty-state {
+            background: rgba(15,23,42,0.5);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow:
+                0 30px 80px -10px rgba(0,0,0,.9),
+                0 0 80px rgba(0,0,0,.5);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: .85rem;
+            line-height: 1.4rem;
+        }
+
+        .empty-state .chip {
+            display: inline-block;
+            background: rgba(30,41,59,0.8);
+            border: 1px solid rgba(148,163,184,0.2);
+            color: #cbd5e1;
+            border-radius: var(--radius-md);
+            padding: .4rem .6rem;
+            font-size: .7rem;
+            margin-top: .75rem;
+        }
+
+        /* -------------------------------------------------
+           RESPONSIVE TWEAKS
+        ------------------------------------------------- */
+        @media (max-width: 500px) {
+            .app-title {
+                font-size: .9rem;
+            }
+            .subtitle {
+                font-size: .7rem;
+            }
+            .run-btn {
+                font-size: .75rem;
+                padding: .55rem .75rem;
+            }
+            .run-btn span.light {
+                font-size: .65rem;
+            }
+            .small-meta {
+                font-size: .6rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="shell">
+
+    <!-- HEADER / CONTROLS -->
+    <div class="topbar">
+        <div class="top-left">
+            <div class="app-title">
+                <span>Personal Day Assistant</span>
+                <span class="badge">ConnectOnion · Playwright</span>
+            </div>
+            <div class="subtitle">
+                One click → browser agent opens Calendar, Inbox, and Weather in real Chrome,
+                screenshots them, and summarizes your day.
+            </div>
+        </div>
+
+        <div class="actions">
+            <div class="small-meta">
+                <div style="color:#fff; font-weight:500;">Today’s Briefing</div>
+                <div>live browser scrape</div>
+            </div>
+
+            <a class="run-btn" href="/run">
+                <div style="display:flex;flex-direction:column;line-height:1.15;">
+                    <div style="font-weight:600;">Plan My Day ↻</div>
+                    <span class="light">refresh now</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-card">
+        <div class="summary-heading">Assistant Summary</div>
+        <div class="summary-body">
+            {% if summary %}
+{{ summary }}
+            {% else %}
+(No summary yet. Click “Plan My Day ↻” to run the assistant.)
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- SCREENSHOTS / RESULTS -->
+    {% if screenshots and screenshots|length > 0 %}
+        <div class="shots-wrapper">
+
+            {% for sc in screenshots %}
+            <div class="shot-card">
+                <div class="shot-head">
+                    <div class="shot-name">
+                        <div class="dot"></div>
+                        <div>{{ sc }}</div>
+                    </div>
+                    <div class="shot-hint">
+                        captured this run
+                    </div>
+                </div>
+
+                <div class="shot-frame">
+                    <img src="/screenshots/{{ sc }}" alt="{{ sc }}" />
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div style="font-weight:500; color:#fff; margin-bottom:.5rem;">
+                No screenshots yet
+            </div>
+            <div>
+                Click <span class="chip">Plan My Day ↻</span> and the agent will:
+                <br/>• Open your Google Calendar day view
+                <br/>• Open Gmail unread
+                <br/>• Check today’s weather
+                <br/>• Generate a summary plan
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+</body>
+</html>
