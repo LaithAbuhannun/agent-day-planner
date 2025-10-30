@@ -10,7 +10,7 @@ A one-click **browser agent** that opens **Google Calendar**, **Gmail**, and **W
 
 <p align="center">
   <!-- Replace with your uploaded demo URL after you add it (Issues → New → attach video OR use repo "New video" flow) -->
-  <a href="https://github.com/user-attachments/assets/REPLACE_WITH_YOUR_VIDEO_ID">
+  <a href="https://youtu.be/iiMtHuNgY1U">
     <img src="screenshots/calendar_today.png" width="600" alt="Click to watch demo">
   </a>
   <br/>
