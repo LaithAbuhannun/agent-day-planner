@@ -39,32 +39,11 @@ class WebAutomation:
         return "Browser opened with persistent Chrome profile."
 
     def close_browser(self):
-        """
-        We intentionally do NOT close the browser after each run.
-        Leaving Chrome open keeps you logged in.
-        """
-        # If you ever want to cleanly shut it down each run, uncomment below:
-        #
-        # try:
-        #     if self.context:
-        #         self.context.close()
-        # except:
-        #     pass
-        # try:
-        #     if self.playwright:
-        #         self.playwright.stop()
-        # except:
-        #     pass
-        #
-        # self.context = None
-        # self.page = None
-        # self.playwright = None
 
         return "Browser left open (not closed)."
 
-    # ---------------------------------
+    
     # utilities
-    # ---------------------------------
 
     def _ensure_screenshots_dir(self):
         os.makedirs("screenshots", exist_ok=True)
@@ -82,9 +61,8 @@ class WebAutomation:
         self.page.screenshot(path=path, full_page=True)
         return path
 
-    # ---------------------------------
+
     # calendar capture (UPDATED)
-    # ---------------------------------
 
     def capture_calendar(self) -> str:
         """
@@ -104,8 +82,6 @@ class WebAutomation:
         # Make sure browser/page exist
         self.open_browser()
 
-        # Force Calendar into day view for today's date
-        # /r/day loads "today" for the active account
         self.page.goto("https://calendar.google.com/calendar/u/0/r/day", timeout=60000)
         time.sleep(2)
 
@@ -125,9 +101,6 @@ class WebAutomation:
             except Exception:
                 continue
 
-            # raw_text often looks like:
-            # "9:30am\nAI Standup – ConnectOnion Agent\nNo location"
-            # We'll clean it into "9:30am – AI Standup – ConnectOnion Agent"
 
             lines = [x.strip() for x in raw_text.splitlines() if x.strip()]
             # lines might be:
@@ -178,9 +151,8 @@ class WebAutomation:
 
         return "\n".join(cal_lines)
 
-    # ---------------------------------
     # inbox capture (unchanged logic, but good already)
-    # ---------------------------------
+
 
     def capture_inbox(self) -> str:
         """
@@ -229,10 +201,9 @@ class WebAutomation:
 
         return "\n".join(out_lines)
 
-    # ---------------------------------
+    
     # weather capture (unchanged logic, but solid)
-    # ---------------------------------
-
+   
     def capture_weather(self) -> str:
         """
         Google 'weather today', screenshot it,
@@ -264,9 +235,8 @@ class WebAutomation:
 
         return "WEATHER\n- " + wsummary
 
-    # ---------------------------------
+    
     # high level capture (unchanged shape)
-    # ---------------------------------
 
     def plan_day_capture(self) -> str:
         """
